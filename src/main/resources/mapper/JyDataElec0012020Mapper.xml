@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiaojin.dao.JyDataElec0012020Mapper">
+    <select id="selectByXml" resultType="com.xiaojin.rsp.MonitorRsp" parameterType="com.xiaojin.req.MonitorReq">
+        SELECT (Sum(a.act_power_p) * b.ct * b.pt) as total_sum,b.id as monitor_id
+        FROM jy_data_elec_h_2020 a
+        left join jy_base_monitor b
+        on a.monitor_id = b.id
+        WHERE
+        <if test="monitorId != null">
+            a.monitor_id = #{monitorId}
+        </if>
+        <if test="startTime != null">
+            AND a.collect_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null">
+            AND a.collect_time &lt; #{endTime}
+        </if>
+        group by b.id
+    </select>
+    <select id="selectByXmlMonth" resultType="com.xiaojin.rsp.MonthRsp2" parameterType="com.xiaojin.req.MonthToReq2">
+        SELECT DATE_FORMAT(a.collect_time, '%Y-%m-%d 00:00:00') as collect_time, Sum(a.act_power_p) * b.ct * b.pt AS total_sum
+        FROM jy_data_elec_h_2020 a
+            left join jy_base_monitor b
+        on a.monitor_id = b.id
+        WHERE YEAR(a.collect_time) = #{year}
+          AND MONTH(a.collect_time) = #{month}
+          and a.monitor_id = #{monitorId}
+        GROUP BY DATE_FORMAT(a.collect_time, '%Y-%m-%d 00:00:00')
+    </select>
+</mapper>

@@ -11,4 +11,5 @@ import java.util.List;
 @Repository
 public interface JyBaseMonitorMapper extends BaseMapper<JyBaseMonitor> {
     List<JyBaseMonitor> selectToMonitor(@Param("dataType") String dataType,@Param("monitorCode") String monitorCode);
+
 }
